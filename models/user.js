@@ -1,64 +1,64 @@
 "use strict";
-const fs = require("fs"); // built in class di nodejs
+const fs = require("fs");
 
-// 1. abstraksi object
-// 2. logic crud
 class User {
+  #age;
+
   constructor(id, firstName, lastName, email, gender, age) {
     this.id = id;
     this.firstName = firstName;
     this.lastName = lastName;
     this.email = email;
     this.gender = gender;
-    this.age = age;
+    this.#age = age;
   }
 
-  static create(id, firstName, lastName, email, gender, age) {
-    if (gender == "Male") {
-      return new MaleUser(id, firstName, lastName, email, age);
-    }
-
-    if (gender == "Female") {
-      return new FemaleUser(id, firstName, lastName, email, age);
-    }
-
-    throw new Error("Invalid gender");
+  get age() {
+    return this.#age;
   }
 
-  static createMany(data) {
-    return data.map((user) => {
-      const { id, firstName, lastName, email, gender, age } = user;
-      return this.create(id, firstName, lastName, email, gender, age);
-    });
+  get fullName() {
+    const title = this.gender == "Male" ? "Mr." : "Mrs.";
+    return `${title} ${this.firstName} ${this.lastName}`;
   }
 
-  static getUsers() {
+  toJSON() {
+    return {
+      ...this,
+      age: this.#age,
+    };
+  }
+
+  static readUsers() {
     const data = fs.readFileSync("./data/users.json", "utf-8");
     const parsedData = JSON.parse(data);
-    return User.createMany(parsedData);
+    const instanceData = this.createManyUsers(parsedData);
+    return instanceData;
   }
 
-  static register(firstName, lastName, email, gender, age) {
-    const users = this.getUsers();
+  static createNewUser(firstName, lastName, email, gender, age) {
+    const users = this.readUsers();
     const lastUser = users.at(-1);
-    const id = !lastUser ? 1 : lastUser.id + 1;
-    const newUser = this.create(id, firstName, lastName, email, gender, age);
+    const lastId = lastUser.id;
+    const id = lastId + 1;
+    const newUser = new User(id, firstName, lastName, email, gender, age);
     users.push(newUser);
     const data = JSON.stringify(users, null, 2);
     fs.writeFileSync("./data/users.json", data);
     return newUser;
   }
-}
 
-class MaleUser extends User {
-  constructor(id, firstName, lastName, email, age) {
-    super(id, firstName, lastName, email, "Male", age);
-  }
-}
-
-class FemaleUser extends User {
-  constructor(id, firstName, lastName, email, age) {
-    super(id, firstName, lastName, email, "Female", age);
+  static createManyUsers(data) {
+    return data.map((el) => {
+      return new User(
+        el.id,
+        el.firstName,
+        el.lastName,
+        el.email,
+        el.gender,
+        el.age
+      );
+    });
   }
 }
 
