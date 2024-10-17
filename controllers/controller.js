@@ -1,22 +1,19 @@
-const Model = require("../models/model");
+const User = require("../models/user");
 const View = require("../views/view");
 
 class Controller {
-  static list() {
-    const data = Model.readUsers();
-    View.showAllUsers(data);
+  static getAllUsers() {
+    const users = User.getAllUsers();
+    View.showAllUsers(users);
   }
 
-  static register({ firstName, lastName, email, gender, age }) {
-    const newUser = Model.createUser({
-      firstName,
-      lastName,
-      email,
-      gender,
-      age,
-    });
+  static register(firstName, lastName, email, gender, age) {
+    const newUser = User.register(firstName, lastName, email, gender, age);
+    View.successRegister(newUser);
+  }
 
-    View.successCreateUser(newUser);
+  static help() {
+    View.showHelp();
   }
 }
 

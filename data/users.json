@@ -73,10 +73,10 @@
   },
   {
     "id": 10,
-    "firstName": "Bagas",
-    "lastName": "Udi",
-    "email": "bagas@mail.com",
+    "firstName": "yotam",
+    "lastName": "putra",
+    "email": "yotam@putra.com",
     "gender": "Male",
-    "age": "25"
+    "age": 23
   }
 ]

@@ -1,21 +1,19 @@
 class View {
   static showAllUsers(users) {
-    // ! Logic untuk mengatur tampilan terletak di view
-    users = users.map((el) => {
-      return {
-        ID: el.id,
-        Fullname: el.fullName,
-        Email: el.email,
-        Gender: el.gender,
-        Age: el.age,
-      };
-    });
-
     console.table(users);
   }
 
-  static successCreateUser(user) {
-    console.log(`User ${user.fullName} has been created!`);
+  static successRegister(newUser) {
+    console.log("Register success!");
+    console.log(`User ${newUser.firstName} has been registered`);
+  }
+
+  static showHelp() {
+    console.log("List of available commands:");
+    console.log("node app.js list");
+    console.log(
+      "node app.js register <firstName> <lastName> <email> <gender> <age>"
+    );
   }
 }
 
